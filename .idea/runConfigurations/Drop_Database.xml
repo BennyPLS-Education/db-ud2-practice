@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Drop Database" type="DatabaseScript">
+    <data-source id="0abed768-1711-40b6-8e75-7d8b86b816d5" />
+    <script-text>DROP DATABASE inventory;</script-text>
+    <method v="2" />
+  </configuration>
+</component>
