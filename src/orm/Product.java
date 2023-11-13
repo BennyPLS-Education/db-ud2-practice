@@ -21,70 +21,78 @@ public record Product(
             Quality.valueOf(set.getString("quality"))
         );
     }
-
+    
     public static Product[] getAll() {
         var products = new ArrayList<Product>();
-
+        
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var set = connection.createStatement().executeQuery("SELECT * FROM products");
-            while (set.next()) {
-                products.add(Product.createFrom(set));
-            }
+            while (set.next()) products.add(Product.createFrom(set));
+            
+            System.out.println("Products loaded");
         } catch (SQLException e) {manageError(e);}
-
+        
         return products.toArray(new Product[0]);
     }
-
+    
     public static Product get(int id) {
         Product product = null;
-
+        
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var set = connection.createStatement().executeQuery("SELECT * FROM products WHERE id = " + id);
-            if (set.next()) {
-                product = Product.createFrom(set);
-            }
+            if (set.next()) product = Product.createFrom(set);
+            
+            System.out.println("Product loaded");
         } catch (SQLException e) {manageError(e);}
-
+        
         return product;
     }
-
+    
     public void insert() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
-            var statement = connection.prepareStatement("INSERT INTO products (name, producer, quality) VALUES (?, ?, ?)");
+            var statement = connection.prepareStatement(
+                "INSERT INTO products (name, producer, quality) VALUES (?, ?, ?)");
+            
             statement.setString(1, name);
             statement.setInt(2, producer);
             statement.setString(3, quality.name());
+            
             statement.executeUpdate();
+            
+            System.out.println("Product inserted");
         } catch (SQLException e) {manageError(e);}
     }
-
+    
     public void update() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
-            var statement = connection.prepareStatement("UPDATE products SET name = ?, producer = ?, quality = ? WHERE id = ?");
+            var statement = connection.prepareStatement(
+                "UPDATE products SET name = ?, producer = ?, quality = ? WHERE id = ?");
+            
             statement.setInt(4, id);
             statement.setString(1, name);
             statement.setInt(2, producer);
             statement.setString(3, quality.name());
+            
             statement.executeUpdate();
+            
+            System.out.println("Product updated");
         } catch (SQLException e) {manageError(e);}
     }
-
+    
     public void delete() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement("DELETE FROM products WHERE id = ?");
+            
             statement.setInt(1, id);
+            
             statement.executeUpdate();
+            
+            System.out.println("Product deleted");
         } catch (SQLException e) {manageError(e);}
     }
-
+    
     @Override
     public String toString() {
-        return String.format(
-            "Product id: %d, name: %s, producer: %s, quality: %s",
-            id,
-            name,
-            Producer.get(producer).name(),
-            quality
-        );
+        return String.format("Product: %s, %s, %s", name, quality, Producer.get(producer).name());
     }
 }

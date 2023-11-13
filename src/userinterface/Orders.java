@@ -6,12 +6,11 @@ import orm.Status;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import static orm.Status.statusSelector;
 import static utils.Inputs.*;
 
 public class Orders {
     public static void add() {
-        Scanner input = new Scanner(System.in);
-
         var warehouse = getNumber("Warehouse id: ");
         var product = getNumber("Product id: ");
         var client = getNumber("Client id: ");

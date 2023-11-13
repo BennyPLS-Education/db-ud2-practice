@@ -5,6 +5,7 @@ import orm.Product;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import static orm.Quality.qualitySelector;
 import static utils.Inputs.*;
 
 public class Products {

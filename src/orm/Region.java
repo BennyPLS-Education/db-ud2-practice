@@ -24,6 +24,8 @@ public record Region(int id, String name, double x, double y) {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var set = connection.createStatement().executeQuery("SELECT * FROM regions");
             while (set.next()) regions.add(Region.createFrom(set));
+            
+            System.out.println("Regions loaded");
         } catch (SQLException e) {manageError(e);}
 
         return regions.toArray(new Region[0]);
@@ -35,6 +37,8 @@ public record Region(int id, String name, double x, double y) {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var set = connection.createStatement().executeQuery("SELECT * FROM regions WHERE id = " + id);
             if (set.next()) region = Region.createFrom(set);
+            
+            System.out.println("Region loaded");
         } catch (SQLException e) {manageError(e);}
 
         return region;
@@ -43,38 +47,46 @@ public record Region(int id, String name, double x, double y) {
     public void insert() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement("INSERT INTO regions (name, x, y) VALUES (?, ?, ?)");
+            
             statement.setString(1, name);
             statement.setDouble(2, x);
             statement.setDouble(3, y);
+            
             statement.executeUpdate();
+            
+            System.out.println("Region inserted");
         } catch (SQLException e) {manageError(e);}
     }
 
     public void update() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement("UPDATE regions SET name = ?, x = ?, y = ? WHERE id = ?");
+            
             statement.setString(1, name);
             statement.setDouble(2, x);
             statement.setDouble(3, y);
             statement.setInt(4, id);
+            
             statement.executeUpdate();
+            
+            System.out.println("Region updated");
         } catch (SQLException e) {manageError(e);}
     }
 
     public void delete() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement("DELETE FROM regions WHERE id = ?");
+            
             statement.setInt(1, id);
+            
             statement.executeUpdate();
+            
+            System.out.println("Region deleted");
         } catch (SQLException e) {manageError(e);}
     }
 
     @Override
     public String toString() {
-        return String.format(
-            "Region %d, %s",
-            id,
-            name
-        );
+        return String.format("Region: %s, X: %s, Y: %s", name, x, y);
     }
 }

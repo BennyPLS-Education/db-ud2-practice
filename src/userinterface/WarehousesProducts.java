@@ -18,8 +18,6 @@ public class WarehousesProducts {
     }
 
     public static void update() {
-        Scanner input = new Scanner(System.in);
-
         var warehouse = getNumber("Warehouse id: ");
         var product = getNumber("Product id: ");
 
