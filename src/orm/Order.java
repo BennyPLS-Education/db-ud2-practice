@@ -42,9 +42,10 @@ public record Order(
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var set = connection.createStatement().executeQuery("SELECT * FROM orders");
             while (set.next()) orders.add(Order.createFrom(set));
-            
-            System.out.println("Orders loaded");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return null;
+        }
         
         return orders.toArray(new Order[0]);
     }
@@ -55,16 +56,15 @@ public record Order(
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var set = connection.createStatement().executeQuery("SELECT * FROM orders WHERE id = " + id);
             if (set.next()) order = Order.createFrom(set);
-            
-            System.out.println("Order loaded");
         } catch (SQLException e) {manageError(e);}
         
         return order;
     }
     
-    public void insert() {
+    public boolean insert() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
-            var statement = connection.prepareStatement("INSERT INTO orders (warehouse, product, client, quantity) VALUES (?, ?, ?, ?)");
+            var statement = connection.prepareStatement(
+                "INSERT INTO orders (warehouse, product, client, quantity) VALUES (?, ?, ?, ?)");
             
             statement.setInt(1, warehouse);
             statement.setInt(2, product);
@@ -72,12 +72,15 @@ public record Order(
             statement.setInt(4, quantity);
             
             statement.executeUpdate();
-            
-            System.out.println("Order inserted");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return false;
+        }
+        
+        return true;
     }
     
-    public void update() {
+    public boolean update() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement(
                 "UPDATE orders SET warehouse = ?, product = ?, client = ?, quantity = ?, date_delivered = ?, date_ordered = ?, status = ? WHERE id = ?"
@@ -93,21 +96,27 @@ public record Order(
             statement.setString(7, status.toString());
             
             statement.executeUpdate();
-            
-            System.out.println("Order updated");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return false;
+        }
+        
+        return true;
     }
     
-    public void delete() {
+    public boolean delete() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement("DELETE FROM orders WHERE id = ?");
             
             statement.setInt(1, id);
             
             statement.executeUpdate();
-            
-            System.out.println("Order deleted");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return false;
+        }
+        
+        return true;
     }
     
     @Override

@@ -13,7 +13,7 @@ public class Clients {
         
         var type = customerTypeSelector();
         
-        new Client(0, name, type).insert();
+        if (new Client(0, name, type).insert()) System.out.println("Client added");
     }
     
     public static void update() {
@@ -26,10 +26,39 @@ public class Clients {
             return;
         }
         
-        var name = getString("Name: ");
-        var type = customerTypeSelector();
+        System.out.println("1. Name");
+        System.out.println("2. Type");
+        Boolean result = null;
+        while (true) {
+            switch (getNumber("Select a field to update: ")) {
+                case 1 -> {
+                    final var name = getString("Name: ");
+                    result = new Client(id, name, client.type()).update();
+                }
+                case 2 -> {
+                    var type = customerTypeSelector();
+                    result = new Client(id, client.name(), type).update();
+                }
+                default -> System.out.println("Option not valid");
+            }
+            if (result != null) {
+                if (result) System.out.println("Client updated");
+                break;
+            }
+        }
+    }
+    
+    public static void clear() {
+        var clients = Client.getAll();
         
-        new orm.Client(id, name, type).update();
+        if (clients == null) return;
+        if (clients.length == 0) {
+            System.out.println("No clients to delete");
+            return;
+        }
+        
+        var results = Arrays.stream(clients).map(Client::delete);
+        if (results.allMatch(Boolean::booleanValue)) System.out.println("Clients deleted");
     }
     
     public static void delete() {
@@ -42,11 +71,19 @@ public class Clients {
             return;
         }
         
-        client.delete();
+        if (client.delete()) System.out.println("Client deleted");
     }
     
     public static void show() {
-        Arrays.stream(Client.getAll()).forEach(System.out::println);
+        var clients = Client.getAll();
+        
+        if (clients == null) return;
+        if (clients.length == 0) {
+            System.out.println("No clients to show");
+            return;
+        }
+        
+        Arrays.stream(clients).forEach(System.out::println);
     }
     
     public static void menu() {
@@ -60,6 +97,7 @@ public class Clients {
             case 2 -> add();
             case 3 -> update();
             case 4 -> delete();
+            case 5 -> clear();
             default -> System.out.println("Option Not valid");
         }
         

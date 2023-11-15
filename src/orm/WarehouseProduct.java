@@ -22,9 +22,10 @@ public record WarehouseProduct(int warehouseId, int productId, int quantity) {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var set = connection.createStatement().executeQuery("SELECT * FROM warehouses_products");
             while (set.next()) warehousesProducts.add(WarehouseProduct.createFrom(set));
-            
-            System.out.println("Warehouse Products loaded");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return null;
+        }
         
         return warehousesProducts.toArray(new WarehouseProduct[0]);
     }
@@ -36,9 +37,10 @@ public record WarehouseProduct(int warehouseId, int productId, int quantity) {
             var set = connection.createStatement()
                 .executeQuery("SELECT * FROM warehouses_products WHERE warehouse = " + warehouseId);
             while (set.next()) warehousesProducts.add(WarehouseProduct.createFrom(set));
-            
-            System.out.println("Warehouse Products loaded");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return null;
+        }
         
         return warehousesProducts.toArray(new WarehouseProduct[0]);
     }
@@ -50,9 +52,10 @@ public record WarehouseProduct(int warehouseId, int productId, int quantity) {
             var set = connection.createStatement()
                 .executeQuery("SELECT * FROM warehouses_products WHERE product = " + productId);
             while (set.next()) warehousesProducts.add(WarehouseProduct.createFrom(set));
-            
-            System.out.println("Warehouse Products loaded");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return null;
+        }
         
         return warehousesProducts.toArray(new WarehouseProduct[0]);
     }
@@ -64,14 +67,12 @@ public record WarehouseProduct(int warehouseId, int productId, int quantity) {
             var set = connection.createStatement()
                 .executeQuery("SELECT * FROM warehouses_products WHERE warehouse = " + warehouseId + " AND product = " + productId);
             if (set.next()) warehouseProduct = WarehouseProduct.createFrom(set);
-            
-            System.out.println("Warehouse Product loaded");
         } catch (SQLException e) {manageError(e);}
         
         return warehouseProduct;
     }
     
-    public void insert() {
+    public boolean insert() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement(
                 "INSERT INTO warehouses_products (warehouse, product, quantity) VALUES (?, ?, ?)");
@@ -81,12 +82,15 @@ public record WarehouseProduct(int warehouseId, int productId, int quantity) {
             statement.setInt(3, quantity);
             
             statement.executeUpdate();
-            
-            System.out.println("Warehouse Product inserted");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return false;
+        }
+        
+        return true;
     }
     
-    public void update() {
+    public boolean update() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement(
                 "UPDATE warehouses_products SET quantity = ? WHERE warehouse = ? AND product = ?");
@@ -96,12 +100,15 @@ public record WarehouseProduct(int warehouseId, int productId, int quantity) {
             statement.setInt(3, productId);
             
             statement.executeUpdate();
-            
-            System.out.println("Warehouse Product updated");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return false;
+        }
+        
+        return true;
     }
     
-    public void delete() {
+    public boolean delete() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement(
                 "DELETE FROM warehouses_products WHERE warehouse = ? AND product = ?");
@@ -110,9 +117,12 @@ public record WarehouseProduct(int warehouseId, int productId, int quantity) {
             statement.setInt(2, productId);
             
             statement.executeUpdate();
-            
-            System.out.println("Warehouse Product deleted");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return false;
+        }
+        
+        return true;
     }
     
     @Override

@@ -23,9 +23,10 @@ public record Client(int id, String name, CustomerType type) {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var set = connection.createStatement().executeQuery("SELECT * FROM clients");
             while (set.next()) clients.add(Client.createFrom(set));
-            
-            System.out.println("Clients loaded");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return null;
+        }
         
         return clients.toArray(new Client[0]);
     }
@@ -40,14 +41,12 @@ public record Client(int id, String name, CustomerType type) {
             
             var set = statement.executeQuery();
             if (set.next()) client = Client.createFrom(set);
-            
-            System.out.println("Client loaded");
         } catch (SQLException e) {manageError(e);}
         
         return client;
     }
     
-    public void insert() {
+    public boolean insert() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement("INSERT INTO clients (name, type) VALUES (?, ?)");
             
@@ -55,12 +54,15 @@ public record Client(int id, String name, CustomerType type) {
             statement.setString(2, type.name());
             
             statement.executeUpdate();
-            
-            System.out.println("Client inserted");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return false;
+        }
+        
+        return true;
     }
     
-    public void update() {
+    public boolean update() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement("UPDATE clients SET name = ?, type = ? WHERE id = ?");
             
@@ -69,21 +71,27 @@ public record Client(int id, String name, CustomerType type) {
             statement.setInt(3, id);
             
             statement.executeUpdate();
-            
-            System.out.println("Client updated");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return false;
+        }
+        
+        return true;
     }
     
-    public void delete() {
+    public boolean delete() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement("DELETE FROM clients WHERE id = ?");
             
             statement.setInt(1, id);
             
             statement.executeUpdate();
-            
-            System.out.println("Client deleted");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return false;
+        }
+        
+        return true;
     }
     
     @Override

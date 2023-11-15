@@ -24,9 +24,7 @@ public record Region(int id, String name, double x, double y) {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var set = connection.createStatement().executeQuery("SELECT * FROM regions");
             while (set.next()) regions.add(Region.createFrom(set));
-            
-            System.out.println("Regions loaded");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {manageError(e); return null;}
 
         return regions.toArray(new Region[0]);
     }
@@ -37,14 +35,12 @@ public record Region(int id, String name, double x, double y) {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var set = connection.createStatement().executeQuery("SELECT * FROM regions WHERE id = " + id);
             if (set.next()) region = Region.createFrom(set);
-            
-            System.out.println("Region loaded");
         } catch (SQLException e) {manageError(e);}
 
         return region;
     }
 
-    public void insert() {
+    public boolean insert() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement("INSERT INTO regions (name, x, y) VALUES (?, ?, ?)");
             
@@ -53,12 +49,13 @@ public record Region(int id, String name, double x, double y) {
             statement.setDouble(3, y);
             
             statement.executeUpdate();
-            
-            System.out.println("Region inserted");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {manageError(e);            return false;
+        }
+        
+        return true;
     }
 
-    public void update() {
+    public boolean update() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement("UPDATE regions SET name = ?, x = ?, y = ? WHERE id = ?");
             
@@ -68,21 +65,23 @@ public record Region(int id, String name, double x, double y) {
             statement.setInt(4, id);
             
             statement.executeUpdate();
-            
-            System.out.println("Region updated");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {manageError(e);            return false;
+        }
+        
+        return true;
     }
 
-    public void delete() {
+    public boolean delete() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement("DELETE FROM regions WHERE id = ?");
             
             statement.setInt(1, id);
             
             statement.executeUpdate();
-            
-            System.out.println("Region deleted");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {manageError(e);            return false;
+        }
+        
+        return true;
     }
 
     @Override

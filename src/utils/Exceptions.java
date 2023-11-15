@@ -25,6 +25,14 @@ public class Exceptions {
                 System.out.println("Error: L'identificador de " + identifierName + " no existix");
             }
             
+            case 1451 -> {
+                var firstParenIndex = e.getMessage().indexOf('(');
+                var secondParenIndexRelative = e.getMessage().substring(++firstParenIndex).indexOf('(');
+                var identifierName = getValueBetween(e.getMessage()
+                    .substring(secondParenIndexRelative + firstParenIndex), '`');
+                System.out.println("Error: L'identificador de " + identifierName + " esta en usw");
+            }
+            
             case 1264 -> {
                 final String val = getValueBetween(e.getMessage(), '\'');
                 System.out.println("Error: El camp " + val + " esta fora de rang");

@@ -28,9 +28,7 @@ public record Product(
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var set = connection.createStatement().executeQuery("SELECT * FROM products");
             while (set.next()) products.add(Product.createFrom(set));
-            
-            System.out.println("Products loaded");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {manageError(e); return null;}
         
         return products.toArray(new Product[0]);
     }
@@ -41,14 +39,12 @@ public record Product(
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var set = connection.createStatement().executeQuery("SELECT * FROM products WHERE id = " + id);
             if (set.next()) product = Product.createFrom(set);
-            
-            System.out.println("Product loaded");
         } catch (SQLException e) {manageError(e);}
         
         return product;
     }
     
-    public void insert() {
+    public boolean insert() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement(
                 "INSERT INTO products (name, producer, quality) VALUES (?, ?, ?)");
@@ -58,12 +54,13 @@ public record Product(
             statement.setString(3, quality.name());
             
             statement.executeUpdate();
-            
-            System.out.println("Product inserted");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {manageError(e);            return false;
+        }
+        
+        return true;
     }
     
-    public void update() {
+    public boolean update() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement(
                 "UPDATE products SET name = ?, producer = ?, quality = ? WHERE id = ?");
@@ -74,21 +71,27 @@ public record Product(
             statement.setString(3, quality.name());
             
             statement.executeUpdate();
-            
-            System.out.println("Product updated");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return false;
+        }
+        
+        return true;
     }
     
-    public void delete() {
+    public boolean delete() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement("DELETE FROM products WHERE id = ?");
             
             statement.setInt(1, id);
             
             statement.executeUpdate();
-            
-            System.out.println("Product deleted");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return false;
+        }
+        
+        return true;
     }
     
     @Override

@@ -33,6 +33,7 @@ public class Inputs {
         System.out.println("2. Add");
         System.out.println("3. Update");
         System.out.println("4. Delete");
+        System.out.println("5. Delete all");
         System.out.println("-------------------------");
     }
 }

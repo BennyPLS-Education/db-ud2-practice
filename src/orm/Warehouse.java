@@ -22,9 +22,10 @@ public record Warehouse(int id, String name, int region) {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var set = connection.createStatement().executeQuery("SELECT * FROM warehouses");
             while (set.next()) warehouses.add(Warehouse.createFrom(set));
-            
-            System.out.println("Warehouses loaded");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return null;
+        }
         
         return warehouses.toArray(new Warehouse[0]);
     }
@@ -35,14 +36,12 @@ public record Warehouse(int id, String name, int region) {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var set = connection.createStatement().executeQuery("SELECT * FROM warehouses WHERE id = " + id);
             if (set.next()) warehouse = Warehouse.createFrom(set);
-            
-            System.out.println("Warehouse loaded");
         } catch (SQLException e) {manageError(e);}
         
         return warehouse;
     }
     
-    public void insert() {
+    public boolean insert() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement("INSERT INTO warehouses (name, region) VALUES (?, ?)");
             
@@ -50,12 +49,15 @@ public record Warehouse(int id, String name, int region) {
             statement.setInt(2, region);
             
             statement.executeUpdate();
-            
-            System.out.println("Warehouse inserted");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return false;
+        }
+        
+        return true;
     }
     
-    public void update() {
+    public boolean update() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement("UPDATE warehouses SET name = ?, region = ? WHERE id = ?");
             
@@ -64,21 +66,27 @@ public record Warehouse(int id, String name, int region) {
             statement.setInt(3, id);
             
             statement.executeUpdate();
-            
-            System.out.println("Warehouse updated");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return false;
+        }
+        
+        return true;
     }
     
-    public void delete() {
+    public boolean delete() {
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var statement = connection.prepareStatement("DELETE FROM warehouses WHERE id = ?");
             
             statement.setInt(1, id);
             
             statement.executeUpdate();
-            
-            System.out.println("Warehouse deleted");
-        } catch (SQLException e) {manageError(e);}
+        } catch (SQLException e) {
+            manageError(e);
+            return false;
+        }
+        
+        return true;
     }
     
     @Override
