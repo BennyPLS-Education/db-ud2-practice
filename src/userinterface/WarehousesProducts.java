@@ -71,8 +71,53 @@ public class WarehousesProducts {
         Arrays.stream(warehouseProducts).forEach(System.out::println);
     }
     
+    public static void showByProduct() {
+        var product = getNumber("Product id: ");
+        
+        var warehouseProducts = WarehouseProduct.getAllFromProduct(product);
+        
+        if (warehouseProducts == null) return;
+        if (warehouseProducts.length == 0) {
+            System.out.println("No warehouse products to show");
+            return;
+        }
+        
+        Arrays.stream(warehouseProducts).forEach(System.out::println);
+    }
+    
+    public static void showByWarehouse() {
+        var warehouse = getNumber("Warehouse id: ");
+        
+        var warehouseProducts = WarehouseProduct.getAllFromWarehouse(warehouse);
+        
+        if (warehouseProducts == null) return;
+        if (warehouseProducts.length == 0) {
+            System.out.println("No warehouse products to show");
+            return;
+        }
+        
+        Arrays.stream(warehouseProducts).forEach(System.out::println);
+    }
+    
+    public static void toCSV() {
+        var warehouseProducts = WarehouseProduct.getAll();
+        
+        if (warehouseProducts == null) return;
+        if (warehouseProducts.length == 0) {
+            System.out.println("No warehouse products to export");
+            return;
+        }
+        
+        utils.CSV.export(Arrays.asList(warehouseProducts), "warehouse_products.csv");
+    }
+    
     public static void menu() {
         showMenu("Warehouse Product");
+        System.out.println("/t Unique");
+        System.out.println("-------------------------");
+        System.out.println("7. Show by warehouse");
+        System.out.println("8. Show by product");
+        System.out.println("-------------------------");
         
         var option = getNumber("Select an option: ");
         
@@ -83,6 +128,9 @@ public class WarehousesProducts {
             case 3 -> update();
             case 4 -> delete();
             case 5 -> clear();
+            case 6 -> toCSV();
+            case 7 -> showByWarehouse();
+            case 8 -> showByProduct();
             default -> System.out.println("Option Not valid");
         }
         

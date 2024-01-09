@@ -96,6 +96,6 @@ public record Producer(int id, String name, Quality quality, int region) {
     
     @Override
     public String toString() {
-        return String.format("Producer: %s, Quality: %s, Region: %s", name, quality, Region.get(region).name());
+        return String.format("Producer: %d, %s, Quality: %s, Region: %s", id, name, quality, Region.get(region).name());
     }
 }

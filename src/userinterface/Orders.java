@@ -2,6 +2,7 @@ package userinterface;
 
 import orm.Order;
 import orm.Status;
+import utils.CSV;
 
 import java.util.Arrays;
 
@@ -112,6 +113,18 @@ public class Orders {
         Arrays.stream(orders).forEach(System.out::println);
     }
     
+    public static void toCSV() {
+        var orders = Order.getAll();
+        
+        if (orders == null) return;
+        if (orders.length == 0) {
+            System.out.println("No orders to show");
+            return;
+        }
+        
+        CSV.export(Arrays.asList(orders), "orders.csv");
+    }
+    
     public static void menu() {
         showMenu("Orders");
         
@@ -124,6 +137,7 @@ public class Orders {
             case 3 -> update();
             case 4 -> delete();
             case 5 -> clear();
+            case 6 -> toCSV();
             default -> System.out.println("Option Not valid");
         }
         

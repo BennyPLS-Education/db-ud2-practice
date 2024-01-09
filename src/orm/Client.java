@@ -13,7 +13,7 @@ public record Client(int id, String name, CustomerType type) {
         return new Client(
             set.getInt("id"),
             set.getString("name"),
-            CustomerType.valueOf(set.getString("type"))
+            CustomerType.parseString(set.getString("type"))
         );
     }
     
@@ -21,8 +21,11 @@ public record Client(int id, String name, CustomerType type) {
         var clients = new ArrayList<Client>();
         
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
-            var set = connection.createStatement().executeQuery("SELECT * FROM clients");
-            while (set.next()) clients.add(Client.createFrom(set));
+            try (var statement = connection.createStatement()) {
+                try (var set = statement.executeQuery("SELECT * FROM clients")) {
+                    while (set.next()) clients.add(Client.createFrom(set));
+                }
+            }
         } catch (SQLException e) {
             manageError(e);
             return null;

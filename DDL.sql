@@ -94,7 +94,7 @@ CREATE TABLE orders
     warehouse      INT NOT NULL,
     product        INT NOT NULL,
     client         INT NOT NULL,
-    quantity       INT NOT NULL,
+    quantity       INT NOT NULL CHECK ( quantity > 0 ),
     date_delivered DATETIME,
     date_ordered   DATETIME                                       DEFAULT CURRENT_TIMESTAMP,
     status         ENUM ('DELIVERED', 'IN SHIPPING', 'PREPARING') DEFAULT 'PREPARING',
@@ -125,12 +125,18 @@ BEGIN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Not enough products in the warehouse';
     END IF;
+END$$
 
+CREATE TRIGGER orders_insert_after
+    AFTER INSERT
+    ON orders
+    FOR EACH ROW
+BEGIN
     UPDATE warehouses_products
     SET quantity = quantity - NEW.quantity
     WHERE warehouse = NEW.warehouse
       AND product = NEW.product;
-END$$
+END $$
 
 ################################ ORDERS UPDATE ################################
 

@@ -122,7 +122,7 @@ public record Order(
     @Override
     public String toString() {
         return String.format(
-            "Order: %d, %s, %s, %s, %d, %s, %s, %s",
+            "Order: %d, %s, %s, %s - %d - %s, %s - %s",
             id,
             Warehouse.get(warehouse).name(),
             Product.get(product).name(),

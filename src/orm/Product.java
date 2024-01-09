@@ -28,7 +28,10 @@ public record Product(
         try (var connection = DriverManager.getConnection(DBData.URL, DBData.USER, DBData.PASSWORD)) {
             var set = connection.createStatement().executeQuery("SELECT * FROM products");
             while (set.next()) products.add(Product.createFrom(set));
-        } catch (SQLException e) {manageError(e); return null;}
+        } catch (SQLException e) {
+            manageError(e);
+            return null;
+        }
         
         return products.toArray(new Product[0]);
     }
@@ -54,7 +57,9 @@ public record Product(
             statement.setString(3, quality.name());
             
             statement.executeUpdate();
-        } catch (SQLException e) {manageError(e);            return false;
+        } catch (SQLException e) {
+            manageError(e);
+            return false;
         }
         
         return true;
@@ -96,6 +101,6 @@ public record Product(
     
     @Override
     public String toString() {
-        return String.format("Product: %s, %s, %s", name, quality, Producer.get(producer).name());
+        return String.format("Product: %d, %s, %s, %s", id, name, quality, Producer.get(producer).name());
     }
 }

@@ -1,6 +1,7 @@
 package userinterface;
 
 import orm.Client;
+import utils.CSV;
 
 import java.util.Arrays;
 
@@ -86,6 +87,18 @@ public class Clients {
         Arrays.stream(clients).forEach(System.out::println);
     }
     
+    public static void toCSV() {
+        var clients = Client.getAll();
+        
+        if (clients == null) return;
+        if (clients.length == 0) {
+            System.out.println("No clients to show");
+            return;
+        }
+        
+        CSV.export(Arrays.asList(clients), "clients.csv");
+    }
+    
     public static void menu() {
         showMenu("Clients");
         
@@ -98,6 +111,7 @@ public class Clients {
             case 3 -> update();
             case 4 -> delete();
             case 5 -> clear();
+            case 6 -> toCSV();
             default -> System.out.println("Option Not valid");
         }
         

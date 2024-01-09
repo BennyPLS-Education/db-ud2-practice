@@ -91,6 +91,6 @@ public record Warehouse(int id, String name, int region) {
     
     @Override
     public String toString() {
-        return String.format("Warehouse: %s, %s", name, Region.get(region).name());
+        return String.format("Warehouse: %d, %s, %s", id, name, Region.get(region).name());
     }
 }

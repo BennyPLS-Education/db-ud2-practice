@@ -1,4 +1,6 @@
 import orm.DBData;
+import orm.Region;
+import orm.Warehouse;
 import userinterface.*;
 
 import java.sql.Connection;
@@ -28,6 +30,7 @@ public class Main {
         System.out.println("7. Menu Warehouse Products");
         System.out.println("8. Order Product/s");
         System.out.println("9. Clear Data");
+        System.out.println("10. Export all to CSV");
         System.out.println("-------------------------");
         
         option = getNumber("Option: ");
@@ -44,6 +47,7 @@ public class Main {
             case 7 -> WarehousesProducts.menu();
             case 8 -> orderProducts();
             case 9 -> clearData();
+            case 10 -> exportAll();
             default -> System.out.println("Option Not valid");
         }
         
@@ -98,7 +102,7 @@ public class Main {
                 
                 while (rs.next()) {
                     clientsIDs.add(rs.getInt("id"));
-                    System.out.printf("ID: %d. %s : %s %n",
+                    System.out.printf("ID: %d. %s, Type: %s %n",
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("type")
@@ -133,16 +137,21 @@ public class Main {
                 productId = getNumber("Product id: ");
             }
             
-            rs = statement.executeQuery("SELECT * FROM warehouses_products WHERE product_id = " + productId);
+            rs = statement.executeQuery("SELECT w.id, w.name, r.name as 'region', quantity FROM warehouses_products " +
+                                        "JOIN inventory.warehouses w ON w.id = warehouses_products.warehouse " +
+                                        "JOIN inventory.regions r ON r.id = w.region " +
+                                        "WHERE product = " + productId);
             
             var warehousesIDs = new ArrayList<Integer>();
             System.out.println("WAREHOUSES");
             
             while (rs.next()) {
-                warehousesIDs.add(rs.getInt("warehouse_id"));
-                System.out.printf("ID: %d. %s %n",
-                    rs.getInt("warehouse_id"),
-                    rs.getString("name")
+                warehousesIDs.add(rs.getInt("id"));
+                System.out.printf("ID: %d. %s, Region: %s, Quantity: %d %n",
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("region"),
+                    rs.getInt("quantity")
                 );
             }
             
@@ -155,10 +164,26 @@ public class Main {
             
             var quantity = getNumber("Quantity: ");
             
+            while (quantity < 1) {
+                System.out.println("Quantity must be greater than 0");
+                quantity = getNumber("Quantity: ");
+            }
             
             statement.executeUpdate("INSERT INTO orders (client, product, warehouse, quantity) VALUES (" + clientId + ", " + productId + ", " + warehaouseId + ", " + quantity + ")");
             
             System.out.println("Order created successfully");
+            
+            connection.commit();
         } catch (SQLException e) {manageError(e);}
+    }
+    
+    public static void exportAll() {
+        Regions.toCSV();
+        Producers.toCSV();
+        Products.toCSV();
+        Warehauses.toCSV();
+        Clients.toCSV();
+        Orders.toCSV();
+        WarehousesProducts.toCSV();
     }
 }

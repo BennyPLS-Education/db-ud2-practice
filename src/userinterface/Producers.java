@@ -3,6 +3,7 @@ package userinterface;
 import orm.Order;
 import orm.Producer;
 import orm.WarehouseProduct;
+import utils.CSV;
 
 import java.util.Arrays;
 import java.util.Scanner;
@@ -101,6 +102,18 @@ public class Producers {
 
         Arrays.stream(producers).forEach(System.out::println);
     }
+    
+    public static void toCSV() {
+        var producers = Producer.getAll();
+        
+        if (producers == null) return;
+        if (producers.length == 0) {
+            System.out.println("No producers to show");
+            return;
+        }
+        
+        CSV.export(Arrays.asList(producers), "producers.csv");
+    }
 
     public static void menu() {
         showMenu("Producers");
@@ -114,6 +127,7 @@ public class Producers {
             case 3 -> update();
             case 4 -> delete();
             case 5 -> clear();
+            case 6 -> toCSV();
             default -> System.out.println("Option Not valid");
         }
 

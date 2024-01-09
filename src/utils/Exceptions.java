@@ -7,6 +7,7 @@ public class Exceptions {
         int errCode = e.getErrorCode();
         
         switch (errCode) {
+            
             case 1062 -> {
                 final String val = getValueBetween(e.getMessage(), '\'');
                 System.out.println("Error: Empleat " + val + " duplicat");
@@ -30,14 +31,15 @@ public class Exceptions {
                 var secondParenIndexRelative = e.getMessage().substring(++firstParenIndex).indexOf('(');
                 var identifierName = getValueBetween(e.getMessage()
                     .substring(secondParenIndexRelative + firstParenIndex), '`');
-                System.out.println("Error: L'identificador de " + identifierName + " esta en usw");
+                System.out.println("Error: L'identificador de " + identifierName + " esta en us");
             }
             
             case 1264 -> {
                 final String val = getValueBetween(e.getMessage(), '\'');
                 System.out.println("Error: El camp " + val + " esta fora de rang");
             }
-            case 45000 -> System.out.println("Error: " + e.getMessage());
+            
+            case 45000, 1644 -> System.out.println("Error: " + e.getMessage());
             
             default -> {
                 System.out.println("Error: " + e.getMessage());

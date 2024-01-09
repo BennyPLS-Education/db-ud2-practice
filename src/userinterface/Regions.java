@@ -99,6 +99,18 @@ public class Regions {
 
         Arrays.stream(regions).forEach(System.out::println);
     }
+    
+    public static void toCSV() {
+        var regions = Region.getAll();
+        
+        if (regions == null) return;
+        if (regions.length == 0) {
+            System.out.println("No regions to show");
+            return;
+        }
+        
+        utils.CSV.export(Arrays.asList(regions), "regions.csv");
+    }
 
     public static void menu() {
         showMenu("Regions");
@@ -112,6 +124,7 @@ public class Regions {
             case 3 -> update();
             case 4 -> delete();
             case 5 -> clear();
+            case 6 -> toCSV();
             default -> System.out.println("Option Not valid");
         }
 

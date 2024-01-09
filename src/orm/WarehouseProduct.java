@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import static utils.Exceptions.manageError;
 
-public record WarehouseProduct(int warehouseId, int productId, int quantity) {
+public record WarehouseProduct(int warehouse, int product, int quantity) {
     public static WarehouseProduct createFrom(ResultSet set) throws SQLException {
         return new WarehouseProduct(
             set.getInt("warehouse"),
@@ -77,8 +77,8 @@ public record WarehouseProduct(int warehouseId, int productId, int quantity) {
             var statement = connection.prepareStatement(
                 "INSERT INTO warehouses_products (warehouse, product, quantity) VALUES (?, ?, ?)");
             
-            statement.setInt(1, warehouseId);
-            statement.setInt(2, productId);
+            statement.setInt(1, warehouse);
+            statement.setInt(2, product);
             statement.setInt(3, quantity);
             
             statement.executeUpdate();
@@ -96,8 +96,8 @@ public record WarehouseProduct(int warehouseId, int productId, int quantity) {
                 "UPDATE warehouses_products SET quantity = ? WHERE warehouse = ? AND product = ?");
             
             statement.setInt(1, quantity);
-            statement.setInt(2, warehouseId);
-            statement.setInt(3, productId);
+            statement.setInt(2, warehouse);
+            statement.setInt(3, product);
             
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -113,8 +113,8 @@ public record WarehouseProduct(int warehouseId, int productId, int quantity) {
             var statement = connection.prepareStatement(
                 "DELETE FROM warehouses_products WHERE warehouse = ? AND product = ?");
             
-            statement.setInt(1, warehouseId);
-            statement.setInt(2, productId);
+            statement.setInt(1, warehouse);
+            statement.setInt(2, product);
             
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -128,8 +128,9 @@ public record WarehouseProduct(int warehouseId, int productId, int quantity) {
     @Override
     public String toString() {
         return String.format("Warehouse Product: %s, %s, %s",
-            Warehouse.get(warehouseId).name(),
-            Product.get(productId).name(),
-            quantity);
+            Warehouse.get(warehouse).name(),
+            Product.get(product).name(),
+            quantity
+        );
     }
 }

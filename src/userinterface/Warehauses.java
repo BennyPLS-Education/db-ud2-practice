@@ -1,6 +1,7 @@
 package userinterface;
 
 import orm.Warehouse;
+import utils.CSV;
 
 import java.util.Arrays;
 import java.util.Scanner;
@@ -89,6 +90,18 @@ public class Warehauses {
         Arrays.stream(warehouses).forEach(System.out::println);
     }
     
+    public static void toCSV() {
+        var warehouses = Warehouse.getAll();
+        
+        if (warehouses == null) return;
+        if (warehouses.length == 0) {
+            System.out.println("No warehouses to export");
+            return;
+        }
+        
+        CSV.export(Arrays.asList(warehouses), "warehouses.csv");
+    }
+    
     public static void menu() {
         showMenu("Warehouses");
         
@@ -101,6 +114,7 @@ public class Warehauses {
             case 3 -> update();
             case 4 -> delete();
             case 5 -> clear();
+            case 6 -> toCSV();
             default -> System.out.println("Option Not valid");
         }
         

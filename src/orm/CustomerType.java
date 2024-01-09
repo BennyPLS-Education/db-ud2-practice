@@ -5,7 +5,29 @@ import static utils.Inputs.getNumber;
 public enum CustomerType {
     PARTICULAR,
     SMALL_BUSINESS,
-    BUSINESS;
+    BUSINESS,
+    OTHER;
+    
+    public static CustomerType parseString(String type) {
+        return switch (type) {
+            case "PARTICULAR" -> PARTICULAR;
+            case "SMALL BUSINESS" -> SMALL_BUSINESS;
+            case "BUSINESS" -> BUSINESS;
+            
+            default -> OTHER;
+        };
+    }
+    
+    @Override
+    public String toString() {
+        return switch (this) {
+            case PARTICULAR -> "PARTICULAR";
+            case SMALL_BUSINESS -> "SMALL BUSINESS";
+            case BUSINESS -> "BUSINESS";
+            
+            case OTHER -> "OTHER";
+        };
+    }
     
     public static CustomerType customerTypeSelector() {
         System.out.println("1. Particular");

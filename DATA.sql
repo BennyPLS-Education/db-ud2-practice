@@ -90,28 +90,108 @@ VALUES ('Apples', 1, 'A'),        -- Acme Produce Co.
        ('Avocados', 20, 'C'); -- Austin AgriPro
 
 INSERT INTO warehouses_products (warehouse, product, quantity)
-VALUES (1, 1, 100),   -- Warehouse A stores 100 Apples
-       (2, 2, 200),   -- Warehouse B stores 200 Oranges
-       (3, 3, 150),   -- Warehouse C stores 150 Tomatoes
-       (4, 4, 300),   -- Warehouse D stores 300 Bananas
-       (5, 5, 50),    -- Warehouse E stores 50 Strawberries
-       (6, 6, 75),    -- Warehouse F stores 75 Pineapples
-       (7, 7, 120),   -- Warehouse G stores 120 Blueberries
-       (8, 8, 250),   -- Warehouse H stores 250 Carrots
-       (9, 9, 90),    -- Warehouse I stores 90 Lettuce
-       (10, 10, 80),  -- Warehouse J stores 80 Peppers
-       (11, 11, 100), -- Warehouse K stores 100 Potatoes
-       (12, 12, 200), -- Warehouse L stores 200 Corn
-       (13, 13, 150), -- Warehouse M stores 150 Grapes
-       (14, 14, 300), -- Warehouse N stores 300 Watermelons
-       (15, 15, 75),  -- Warehouse O stores 75 Avocados
-       (16, 16, 120), -- Warehouse P stores 120 Broccoli
-       (17, 17, 90),  -- Warehouse Q stores 90 Cucumbers
-       (18, 18, 150), -- Warehouse R stores 150 Apples
-       (19, 19, 50),  -- Warehouse S stores 50 Strawberries
-       (20, 20, 75); -- Warehouse T stores 75 Avocados
+VALUES
+    -- Warehouse A
+    (1, 1, 100),   -- stores 100 Apples
+    (1, 2, 120),   -- stores 120 Oranges
+    (1, 3, 50),    -- stores 50 Bananas
 
-INSERT INTO clients (name, type)
+    -- Warehouse B
+    (2, 4, 200),   -- stores 200 Pineapples
+    (2, 5, 180),   -- stores 180 Strawberries
+    (2, 6, 100),   -- stores 100 Tomatoes
+
+    -- Warehouse C
+    (3, 7, 150),   -- stores 150 Carrots
+    (3, 8, 250),   -- stores 250 Blueberries
+    (3, 9, 180),   -- stores 180 Lettuce
+
+    -- Warehouse D
+    (4, 10, 300),  -- stores 300 Broccoli
+    (4, 11, 30),   -- stores 30 Watermelons
+    (4, 12, 20),   -- stores 20 Avocados
+
+    -- Warehouse E
+    (5, 13, 50),   -- stores 50 Grapes
+    (5, 14, 60),   -- stores 60 Potatoes
+    (5, 15, 40),   -- stores 40 Corn
+
+    -- Warehouse F
+    (6, 16, 75),   -- stores 75 Avocados
+    (6, 17, 90),   -- stores 90 Broccoli
+    (6, 18, 70),   -- stores 70 Cucumbers
+
+    -- Warehouse G
+    (7, 19, 120),  -- stores 120 Oranges
+    (7, 20, 200),  -- stores 200 Tomatoes
+    (7, 1, 150),   -- stores 150 Bananas
+
+    -- Warehouse H
+    (8, 2, 250),   -- stores 250 Pineapples
+    (8, 3, 120),   -- stores 120 Strawberries
+    (8, 4, 80),    -- stores 80 Tomatoes
+    -- Warehouse I
+    (9, 5, 90),    -- stores 90 Apples
+    (9, 6, 60),    -- stores 60 Oranges
+    (9, 7, 40),    -- stores 40 Bananas
+
+    -- Warehouse J
+    (10, 8, 80),   -- stores 80 Strawberries
+    (10, 9, 80),   -- stores 80 Pineapples
+    (10, 10, 60),  -- stores 60 Blueberries
+
+    -- Warehouse K
+    (11, 11, 100), -- stores 100 Carrots
+    (11, 12, 150), -- stores 150 Lettuce
+    (11, 13, 120), -- stores 120 Broccoli
+
+    -- Warehouse L
+    (12, 14, 200), -- stores 200 Watermelons
+    (12, 15, 100), -- stores 100 Avocados
+    (12, 16, 80),  -- stores 80 Grapes
+
+    -- Warehouse M
+    (13, 17, 150), -- stores 150 Potatoes
+    (13, 18, 200), -- stores 200 Corn
+    (13, 19, 150), -- stores 150 Avocados
+
+    -- Warehouse N
+    (14, 20, 300), -- stores 300 Grapes
+    (14, 1, 50),   -- stores 50 Potatoes
+    (14, 2, 30),   -- stores 30 Corn
+
+    -- Warehouse O
+    (15, 3, 75),   -- stores 75 Avocados
+    (15, 4, 80),   -- stores 80 Broccoli
+    (15, 5, 80),   -- stores 80 Cucumbers
+
+    -- Warehouse P
+    (16, 6, 120),  -- stores 120 Apples
+    (16, 7, 60),   -- stores 60 Oranges
+    (16, 8, 40),   -- stores 40 Tomatoes
+
+    -- Warehouse Q
+    (17, 9, 90),   -- stores 90 Bananas
+    (17, 10, 150), -- stores 150 Pineapples
+    (17, 11, 80),  -- stores 80 Strawberries
+
+    -- Warehouse R
+    (18, 12, 150), -- stores 150 Blueberries
+    (18, 13, 50),  -- stores 50 Carrots
+    (18, 14, 20),  -- stores 20 Lettuce
+
+    -- Warehouse S
+    (19, 15, 50),  -- stores 50 Broccoli
+    (19, 16, 40),  -- stores 40 Watermelons
+    (19, 17, 30),  -- stores 30 Avocados
+
+    -- Warehouse T
+    (20, 18, 75),  -- stores 75 Grapes
+    (20, 19, 80),  -- stores 80 Potatoes
+    (20, 20, 60); -- stores 60 Corn
+
+
+INSERT INTO clients (NAME, type)
 VALUES ('John Doe', 'PARTICULAR'),
        ('Alice Smith', 'PARTICULAR'),
        ('XYZ Company', 'BUSINESS'),

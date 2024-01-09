@@ -34,6 +34,7 @@ public class Inputs {
         System.out.println("3. Update");
         System.out.println("4. Delete");
         System.out.println("5. Delete all");
+        System.out.println("6. Export to CSV");
         System.out.println("-------------------------");
     }
 }
